@@ -1,7 +1,7 @@
 import { createMatcher } from "./matcher";
 
-describe("match", () => {
-  it("matches all cases correctly including default", async () => {
+describe("check matcher calls correct handlers", () => {
+  it("calls handlers for keys: 400, 500 and _", async () => {
     const match = createMatcher("status");
     type ServerResponse =
       | { status: 500; message: string }
@@ -25,8 +25,14 @@ describe("match", () => {
       _: () => "no match",
     })({} as any);
 
+    const match_none = match<ServerResponse>()({
+      500: ({ message }) => message,
+      400: ({ error }) => error,
+    })({} as any);
+
     expect(match500).toBe("woops");
     expect(match400).toBe("bad req");
     expect(match_).toBe("no match");
+    expect(match_none).toBe(undefined);
   });
 });
