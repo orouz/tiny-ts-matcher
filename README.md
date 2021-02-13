@@ -33,7 +33,7 @@ const match = match<ServerResponse>()({
   500: ({ message }) => message,
   400: ({ error }) => error,
   _: () => "no match",
-})({ tag: 500, message: "woops" });
+})({ status: 500, message: "woops" });
 
 // match: woops
 ```
