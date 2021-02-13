@@ -4,7 +4,6 @@
   "description": "type safe replacement for switch statements",
   "main": "dist/matcher.js",
   "types": "dist/matcher.d.ts",
-  "version": "0.0.0-development",
   "scripts": {
     "test": "jest",
     "build": "tsc -b",
