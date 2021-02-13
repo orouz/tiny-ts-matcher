@@ -27,19 +27,10 @@ export function createMatcher<TagKey extends string>(key: TagKey) {
     >(
       cases: Cases
     ) => <Value extends TaggedUnion>(
-      // ^^ the value to match against must be one of our union type
+      // ^^ the value to match against
       v: Value
-    ): TaggedUnion[TagKey] extends Value[TagKey]
-      ? unknown extends Cases["_"]
-        ? undefined
-        : ReturnType<Cases["_"]>
-      : ReturnType<Cases[Value[TagKey]]> =>
-      // ^^ the return type should be what our handler returns if it's called
-      // otherwise, fall back to default handler or undefined if there isn't one
-      // we can tell which return type it's going to be by checking the given value
-      // a value with a correct tag key should hit a case handler, so we check if the entire union extends the key
-      // which it won't, as the key is missing members (rest of the union) so it will get to the 'else' branch to get the return type of the case handler
-      // only 'any' or 'unknown' will get to the first branch, as both are top-types, which can always be extended, and can also be passed as the value type
+    ): ReturnType<Cases[Value[TagKey]]> =>
+      // ^^ Get the value from Cases given the TagKey of Value
       cases[v[key]]?.(v) ?? cases["_"]?.(v);
     // ^^ return the value from a case handler or the default handler, undefined if none return a value
   };
