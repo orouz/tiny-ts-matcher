@@ -29,11 +29,11 @@ type ServerResponse =
   | { status: 500; message: string }
   | { status: 400; error: string };
 
-const match = match<ServerResponse>()({
+const result = match<ServerResponse>()({
   500: ({ message }) => message,
   400: ({ error }) => error,
   _: () => "no match",
 })({ status: 500, message: "woops" });
 
-// match: woops
+// result: woops
 ```
