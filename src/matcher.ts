@@ -9,29 +9,17 @@
  *  _: () => 'default'
  * })
  */
-export function createMatcher<TagKey extends string>(key: TagKey) {
-  // ^^ TagKey is the discriminator of our discriminated union
-  return <TaggedUnion extends { [E in TagKey]: string | number }>() => {
-    // ^^ TaggedUnion is our discriminated union
+export function createMatcher<Tag extends string>(key: Tag) {
+  return <Union extends { [E in Tag]: any }>() => {
     return <
       Cases extends {
-        // ^^ Cases is our handlers object (like switch cases)
-        [P in TaggedUnion[TagKey]]: (
-          // ^^ verify all keys are specified in Cases (although it will take more)
-          v: TaggedUnion & { [E in TagKey]: P }
-          // ^^ use the correct union type as the handler argument type by narrowing down TaggedUnion
-        ) => any;
-        // ^^ we can return anything from each case, it will be inferred later
+        [P in Union[Tag]]: (v: Union & { [E in Tag]: P }) => any;
       } & { _?: (v: unknown) => any }
-      // ^^ use "_" as the default case handler
     >(
       cases: Cases
-    ) => <Value extends TaggedUnion>(
-      // ^^ the value to match against
-      v: Value
-    ): ReturnType<Cases[Value[TagKey]]> =>
-      // ^^ Get the value from Cases given the TagKey of Value
-      cases[v[key]]?.(v) ?? cases["_"]?.(v);
-    // ^^ return the value from a case handler or the default handler, undefined if none return a value
+    ) => <Value extends Union>(v: Value): ReturnType<Cases[Value[Tag]]> => {
+      const handler = cases[v[key]];
+      return handler ? handler(v) : cases._?.(v);
+    };
   };
 }
