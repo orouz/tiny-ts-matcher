@@ -2,7 +2,7 @@
 <div>☔</div>
 <div>tiny-ts-matcher</div> </h1>
 <p align="center">
-  <a href="https://www.npmjs.com/package/tiny-ts-matcher"><img src="https://img.shields.io/npm/v/readme-md-generator.svg" /></a>
+  <a href="https://www.npmjs.com/package/tiny-ts-matcher"><img src="https://img.shields.io/npm/v/tiny-ts-matcher" /></a>
   <img src="https://img.shields.io/bundlephobia/minzip/tiny-ts-matcher" />
   <a href="https://github.com/kefranabg/readme-md-generator/blob/master/LICENSE">
     <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg" target="_blank" />
