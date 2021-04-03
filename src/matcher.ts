@@ -13,8 +13,8 @@ export function createMatcher<Tag extends string>(key: Tag) {
   return <Union extends { [E in Tag]: any }>() => {
     return <
       Cases extends {
-        [P in Union[Tag]]: (v: Union & { [E in Tag]: P }) => any;
-      } & { _?: (v: unknown) => any }
+        [P in Union[Tag]]: (v: Union & { [E in Tag]: P }) => unknown;
+      } & { _?: (v: unknown) => unknown }
     >(
       cases: Cases
     ) => <Value extends Union>(v: Value): ReturnType<Cases[Value[Tag]]> => {
