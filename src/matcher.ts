@@ -1,3 +1,16 @@
+type Key = string | number;
+
+// TODO: describe a union of objects and their discriminator key/value along with other possible values
+type UnionLike = { [k: Key]: Key } & { [f: Key]: any };
+
+interface DefaultCaseHandler {
+  _?: (v: unknown) => unknown;
+}
+
+export type CaseHandlers<Tag extends Key, Union extends UnionLike> = {
+  [P in Union as P[Tag]]: (v: P) => unknown;
+} & DefaultCaseHandler;
+
 /**
  * Match a value to a handler based on a discriminated union type
  * @example
@@ -9,17 +22,11 @@
  *  _: () => 'default'
  * })
  */
-export function createMatcher<Tag extends string>(key: Tag) {
-  return <Union extends { [E in Tag]: any }>() => {
-    return <
-      Cases extends {
-        [P in Union[Tag]]: (v: Union & { [E in Tag]: P }) => unknown;
-      } & { _?: (v: unknown) => unknown }
-    >(
-      cases: Cases
-    ) => <Value extends Union>(v: Value): ReturnType<Cases[Value[Tag]]> => {
-      const handler = cases[v[key]];
-      return handler ? handler(v) : cases._?.(v);
-    };
+export const createMatcher =
+  <Union extends UnionLike>() =>
+  <Tag extends Extract<keyof Union, Key>>(tag: Tag) =>
+  <Cases extends CaseHandlers<Tag, Union>>(cases: Cases) =>
+  <Value extends Union>(v: Value): ReturnType<Cases[Value[Tag]]> => {
+    const handler = cases[v[tag]];
+    return handler ? handler(v) : cases._?.(v);
   };
-}
